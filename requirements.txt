@@ -1,4 +1,4 @@
-Flask>=3.0,<4
+﻿Flask>=3.0,<4
 Flask-Login>=0.6,<1
 Flask-WTF>=1.2,<2
 Flask-Bcrypt>=1.0,<2
@@ -7,5 +7,4 @@ SQLAlchemy>=2.0,<3
 email-validator>=2.0,<3
 Pillow>=10,<12
 gunicorn>=21,<23
-
-
+psycopg2==2.9.10
