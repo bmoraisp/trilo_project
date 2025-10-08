@@ -6,6 +6,7 @@ from flask_sqlalchemy import SQLAlchemy
 from pathlib import Path
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
+from sqlalchemy import create_engine, inspect
 import os
 
 app = Flask(__name__)
@@ -14,7 +15,7 @@ app.config['SECRET_KEY'] = '88da79784728e3aaa3156a182dec3419'
 
 # Verifica se está rodando em produção e recebe o caminho do banco postgres definido na variavel de ambiente: DATABASE_URL
 if os.getenv('DATABASE_URL'):
-    app.config['SQLALCHEMY_DATABASE_URI']  = os.getenv('DATABASE_URL')
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
 else:
     # URI é o caminho no meu computador onde vai estar esse banco de dados. /// indica que o banco será criado em relação ao CWD.
     BASE_DIR = Path(__file__).resolve().parent # .../site_flask/comunidade
@@ -32,8 +33,14 @@ login_manager = LoginManager(app)
 login_manager.login_view = 'login' # página que será redirecionado o usuário, se tentar acessar sem login onde o login é requerido
 login_manager.login_message_category = 'alert-info' # caixa azul
 
+from comunidade import models
+db = create_engine(app.config['SQLALCHEMY_DATABASE_URI'])
+inspector = inspect(db)
+if not inspector.has_table('usuario'):
+    with app.app_context():
+        database.drop_all()
+        database.create_all()
+
 # executa o arquivo route.py
 from comunidade import routes 
-
-
 
