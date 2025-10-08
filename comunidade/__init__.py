@@ -6,15 +6,21 @@ from flask_sqlalchemy import SQLAlchemy
 from pathlib import Path
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
+import os
 
 app = Flask(__name__)
 # Token estará apenas no seu código e não aparece mais em nenhum lugar.
 app.config['SECRET_KEY'] = '88da79784728e3aaa3156a182dec3419'
 
-# URI é o caminho no meu computador onde vai estar esse banco de dados. /// indica que o banco será criado em relação ao CWD.
-BASE_DIR = Path(__file__).resolve().parent # .../site_flask/comunidade
-DB_PATH  = BASE_DIR / "comunidade.db"
-app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{DB_PATH.as_posix()}"
+# Verifica se está rodando em produção e recebe o caminho do banco postgres definido na variavel de ambiente: DATABASE_URL
+if os.getenv('DATABASE_URL'):
+    app.config['SQLALCHEMY_DATABASE_URI']  = os.getenv('DATABASE_URL')
+else:
+    # URI é o caminho no meu computador onde vai estar esse banco de dados. /// indica que o banco será criado em relação ao CWD.
+    BASE_DIR = Path(__file__).resolve().parent # .../site_flask/comunidade
+    DB_PATH  = BASE_DIR / "comunidade.db"
+    app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{DB_PATH.as_posix()}"
+
 # vai criar o banco de dados de acordo com as configurações do nosso app.
 database = SQLAlchemy(app)
 
@@ -28,4 +34,6 @@ login_manager.login_message_category = 'alert-info' # caixa azul
 
 # executa o arquivo route.py
 from comunidade import routes 
+
+
 
