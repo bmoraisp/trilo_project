@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block body %}
+        <div class="container py-5 d-flex justify-content-center">
+        <form method="POST" action="" class="card shadow-sm border-0 p-4 w-100" style="max-width: 680px;">
+                {{ form_criar_post.csrf_token }}
+                <div class="d-flex align-items-center mb-4">
+                <img src="{{ url_for('static', filename='fotos_perfil/{}'.format(current_user.foto_perfil)) }}"
+                        alt="Foto de perfil de {{ current_user.username }}"
+                        class="rounded-circle border border-3 border-white shadow-sm me-3" width="80" height="80">
+                <div>
+                        <h2 class="h5 mb-1">{{ current_user.username }}</h2>
+                </div>
+                </div>
+
+                <fieldset class="mb-4">
+                <div class="mb-3">
+                        {{ form_criar_post.titulo.label(class="form-label fw-semibold") }}
+                        {% if form_criar_post.titulo.errors %}
+                        {{ form_criar_post.titulo(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                                {% for erro in form_criar_post.titulo.errors %}{{ erro }}{% endfor %}
+                        </div>
+                        {% else %}
+                        {{ form_criar_post.titulo(class="form-control form-control-lg", placeholder="Dê um título ao seu post") }}
+                        {% endif %}
+                </div>
+                <div>
+                        {{ form_criar_post.corpo.label(class="form-label fw-semibold") }}
+                        {% if form_criar_post.corpo.errors %}
+                        {{ form_criar_post.corpo(class="form-control is-invalid", rows=5, placeholder="Compartilhe o que está acontecendo...") }}
+                        <div class="invalid-feedback">
+                                {% for erro in form_criar_post.corpo.errors %}{{ erro }}{% endfor %}
+                        </div>
+                        {% else %}
+                        {{ form_criar_post.corpo(class="form-control", rows=5, placeholder="Compartilhe o que está acontecendo...") }}
+                        {% endif %}
+                </div>
+                </fieldset>
+
+                <div class="d-flex justify-content-end">
+                {{ form_criar_post.botao_submit_postar(class="btn btn-primary btn-lg px-5") }}
+                </div>
+        </form>
+        </div>
+{% endblock %}

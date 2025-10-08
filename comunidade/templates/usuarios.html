@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<section class="py-5 bg-light">
+    <div class="container">
+        <h1 class="h3 fw-semibold text-center mb-5">Quem faz parte do Trilo</h1>
+        <div class="row g-4 justify-content-center">
+            {% for usuario in lista_usuarios %}
+            <div class="col-12">
+                <article class="card shadow-sm border-0 p-4 p-md-5 usuario-card">
+                    <div class="d-flex flex-column flex-md-row align-items-center align-items-md-center gap-4">
+                        <div class="usuario-avatar flex-shrink-0">
+                            <img src="{{ url_for('static', filename='fotos_perfil/{}'.format(usuario.foto_perfil)) }}"
+                                 alt="Foto de {{ usuario.username }}"
+                                 class="rounded-circle border border-3 border-white shadow-sm"
+                                 width="140" height="140" style="object-fit: cover;">
+                        </div>
+                        <div class="flex-grow-1 text-center text-md-start">
+                            <header class="mb-4">
+                                <h2 class="h4 mb-1">{{ usuario.username }}</h2>
+                                <p class="text-muted mb-0">{{ usuario.email }}</p>
+                            </header>
+
+                            <div class="usuario-stats d-flex flex-wrap gap-3 justify-content-center justify-content-md-start mb-4">
+                                <div class="stat-pill">
+                                    <small class="text-muted text-uppercase">Posts</small>
+                                    <strong>{{ usuario.contar_posts() }}</strong>
+                                </div>
+                                <div class="stat-pill">
+                                    <small class="text-muted text-uppercase">Interesses</small>
+                                    <strong>
+                                        {% if 'Não Informado' in usuario.cursos %}
+                                            0
+                                        {% else %}
+                                            {{ usuario.cursos.count(';') + 1 }}
+                                        {% endif %}
+                                    </strong>
+                                </div>
+                            </div>
+
+                            <div class="mt-4">
+                                <span class="text-muted text-uppercase small d-block mb-2">Interesses</span>
+                                {% set interesses = usuario.cursos.split(';') if usuario.cursos else [] %}
+                                {% if interesses and 'Não Informado' not in interesses %}
+                                <div class="d-flex flex-wrap gap-2 justify-content-center justify-content-md-start">
+                                    {% for interesse in interesses %}
+                                    <span class="badge rounded-pill bg-outline-primary text-primary border border-primary px-3 py-2">
+                                        {{ interesse }}
+                                    </span>
+                                    {% endfor %}
+                                </div>
+                                {% else %}
+                                <p class="text-muted mb-0">Adicione interesses e personalize seu feed.</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

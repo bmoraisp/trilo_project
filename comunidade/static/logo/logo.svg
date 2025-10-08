@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="256" height="256" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+  <title>Trilo — Grid-Glyph (T‑R‑I sugeridos)</title>
+  <style>:root{--ink:#111827}</style>
+  <g fill="var(--ink)">
+    <!-- Grade 4x4 de blocos 48x48 com gaps de 16 -->
+    <!-- Linha do T -->
+    <rect x="16" y="16" width="48" height="48"/><rect x="80" y="16" width="48" height="48"/><rect x="144" y="16" width="48" height="48"/><rect x="208" y="16" width="48" height="48"/>
+    <rect x="112" y="80" width="48" height="48"/>
+    <!-- R (perna e barriga) -->
+    <rect x="16" y="80" width="48" height="48"/><rect x="80" y="80" width="48" height="48"/>
+    <rect x="16" y="144" width="48" height="48"/><rect x="80" y="144" width="48" height="48"/>
+    <rect x="144" y="144" width="48" height="48"/>
+    <!-- I (barra vertical) -->
+    <rect x="208" y="80" width="48" height="48"/><rect x="208" y="144" width="48" height="48"/><rect x="208" y="208" width="48" height="48"/>
+  </g>
+</svg>

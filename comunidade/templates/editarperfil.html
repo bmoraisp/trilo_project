@@ -1,0 +1,66 @@
+{% extends 'perfil.html' %}
+
+{% block editarperfil %}
+        <div class="row justify-content-center">
+            <div class="col-xl-5 col-lg-6">
+                <form method="POST" action="" enctype="multipart/form-data" class="card shadow-sm border-0 p-4 p-lg-5 mb-4">
+                    {{ form_editar_perfil.csrf_token }}
+                    <legend class="h4 mb-4">Editar Perfil</legend>
+                    <fieldset class="mb-4">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                {{ form_editar_perfil.username.label(class="form-label fw-semibold") }}
+                                {% if form_editar_perfil.username.errors %}
+                                    {{ form_editar_perfil.username(class="form-control is-invalid") }}
+                                    <div class="invalid-feedback">
+                                        {% for erro in form_editar_perfil.username.errors %}{{ erro }}{% endfor %}
+                                    </div>
+                                {% else %}
+                                    {{ form_editar_perfil.username(class="form-control") }}
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form_editar_perfil.email.label(class="form-label fw-semibold") }}
+                                {% if form_editar_perfil.email.errors %}
+                                    {{ form_editar_perfil.email(class="form-control is-invalid") }}
+                                    <div class="invalid-feedback">
+                                        {% for erro in form_editar_perfil.email.errors %}{{ erro }}{% endfor %}
+                                    </div>
+                                {% else %}
+                                    {{ form_editar_perfil.email(class="form-control") }}
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            {{ form_editar_perfil.foto_perfil.label(class="form-label fw-semibold") }}
+                            {{ form_editar_perfil.foto_perfil(class_="form-control", accept="image/*") }}
+                            <div class="form-text">PNG ou JPG até 2MB.</div>
+                            {% if form_editar_perfil.foto_perfil.errors %}
+                                {% for erro in form_editar_perfil.foto_perfil.errors %}
+                                    <span class="text-danger">{{ erro }}</span><br>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                    </fieldset>
+                    <div class="mb-4">
+                        <p class="mb-2 fw-semibold">Escolha seus interesses para personalizar seu feed:</p>
+                        <div class="row row-cols-2 row-cols-md-4 g-2">
+                            {% for campo in form_editar_perfil %}
+                                {% if 'int_' in campo.name %}
+                                <div class="col">
+                                    <label class="form-check d-flex align-items-center gap-2 px-2 py-1 rounded-3 border bg-light-subtle">
+                                        {{ campo(class="form-check-input", id=campo.id) }}
+                                        <span class="form-check-label" for="{{ campo.id }}">{{ campo.label.text }}</span>
+                                    </label>
+                                </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="text-end">
+                        {{ form_editar_perfil.botao_submit_editar_perfil(class="btn btn-primary px-5") }}
+                    </div>
+                </form>
+            </div>
+        </div>
+{% endblock %}

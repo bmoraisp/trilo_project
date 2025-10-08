@@ -1,0 +1,59 @@
+<nav class="navbar navbar-expand-lg navbar-elevated sticky-top">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center gap-2" href="{{ url_for('home') }}">
+            <img src="{{ url_for('static', filename='logo/logo.svg') }}" alt="Logo" width="36" height="36">
+            <span class="fw-semibold">Trilo</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarMain" aria-controls="navbarMain"
+                aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarMain">
+            <ul class="navbar-nav ms-lg-4 me-auto">
+                <li class="nav-item">
+                    <a class="nav-link {% if request.endpoint == 'home' %}active{% endif %}"
+                       href="{{ url_for('home') }}">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if request.endpoint == 'usuarios' %}active{% endif %}"
+                       href="{{ url_for('usuarios') }}">Usuários</a>
+                </li>
+            </ul>
+
+            <ul class="navbar-nav align-items-lg-center gap-lg-2">
+                {% if current_user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link {% if request.endpoint == 'criar_post' %}active{% endif %}"
+                    href="{{ url_for('criar_post') }}">
+                        Criar Post
+                    </a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" href="#"
+                       id="perfilDropdown" role="button" data-bs-toggle="dropdown"
+                       aria-expanded="false">
+                        <img src="{{ url_for('static', filename='fotos_perfil/{}'.format(current_user.foto_perfil)) }}"
+                             alt="Foto de {{ current_user.username }}" class="rounded-circle" width="28" height="28">
+                        {{ current_user.username }}
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="perfilDropdown">
+                        <li><a class="dropdown-item" href="{{ url_for('perfil') }}">Perfil</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('criar_post') }}">Novo Post</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item text-danger" href="{{ url_for('sair') }}">Sair</a></li>
+                    </ul>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a class="btn btn-outline-primary px-3" href="{{ url_for('login') }}">Entrar</a>
+                </li>
+                <li class="nav-item">
+                    <a class="btn btn-primary px-3" href="{{ url_for('login') }}">Criar Conta</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>

@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<section class="feed-timeline-wrapper py-5 bg-light">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <h1 id="feed-title" class="feed-timeline-title text-center mb-5">
+                    O que estão <span id="feed-dynamic-word" class="feed-dynamic-word">pensando</span> agora?
+                </h1>
+                {% if posts %}
+                <ul class="feed-timeline list-unstyled">
+                    {% for post in posts|sort(attribute='data_criacao', reverse=True) %}
+                    <li class="feed-timeline-item">
+                        <div class="feed-timeline-time">
+                            <span class="date">{{ post.data_criacao.strftime('%d/%m/%Y') }}</span>
+                            <span class="time">{{ post.data_criacao.strftime('%H:%M') }}</span>
+                        </div>
+                        <div class="feed-timeline-icon">
+                            <span class="feed-timeline-dot"></span>
+                        </div>
+                        <div class="feed-timeline-card">
+                        <a href="{{ url_for('exibir_post', post_id=post.id) }}" class="feed-timeline-link d-block text-reset text-decoration-none">
+                            <div class="feed-timeline-header d-flex justify-content-between align-items-start mb-3">
+                                <div class="d-flex align-items-center">
+                                    <span class="feed-userimage me-3">
+                                        <img src="{{ url_for('static', filename='fotos_perfil/{}'.format(post.autor.foto_perfil)) }}" alt="Foto de {{ post.autor.username }}">
+                                    </span>
+                                    <div>
+                                        <span class="feed-username d-block">{{ post.autor.username }}</span>
+                                    </div>
+                                </div>
+                                <span class="feed-timeline-meta text-muted">{{ post.titulo }}</span>
+                            </div>
+                            <div class="feed-timeline-content">
+                                <h3 class="feed-timeline-post-title">{{ post.titulo }}</h3>
+                                <p>{{ post.corpo }}</p>
+                            </div>
+                        </a>
+                            <div class="feed-timeline-footer d-flex justify-content-end gap-3 mt-4">
+                                <button type="button" class="btn btn-link px-0 text-decoration-none text-muted">Curtir</button>
+                                <button type="button" class="btn btn-link px-0 text-decoration-none text-muted">Comentar</button>
+                                <button type="button" class="btn btn-link px-0 text-decoration-none text-muted">Compartilhar</button>
+                            </div>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <div class="feed-timeline-empty text-center py-5">
+                    <h2 class="h5 text-muted mb-3">Ainda nao ha publicacoes por aqui.</h2>
+                    <p class="mb-0">Que tal ser o primeiro? <a href="{{ url_for('criar_post') }}">Criar post</a></p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var dynamicWord = document.getElementById('feed-dynamic-word');
+    if (!dynamicWord) {
+        return;
+    }
+
+    var words = ['pensando', 'falando', 'debatendo', 'reagindo', 'descobrindo', 'fazendo'];
+    var index = 0;
+
+    function cycleWord() {
+        dynamicWord.classList.add('is-hidden');
+        setTimeout(function () {
+            index = (index + 1) % words.length;
+            dynamicWord.textContent = words[index];
+            dynamicWord.classList.remove('is-hidden');
+        }, 280);
+    }
+
+    setInterval(cycleWord, 2400);
+});
+</script>
+
+{% endblock %}
+
+
+
+

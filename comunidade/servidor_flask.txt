@@ -1,0 +1,101 @@
+No seu PC, quando você roda python main.py (ou flask run), o Python inicia um programa que:
+
+carrega sua app Flask de comunidade/__init__.py;
+
+abre uma porta (ex.: 5000) e fica escutando pedidos HTTP;
+
+chama suas funções em routes.py para montar respostas.
+
+Esse programa em execução é o tal PROCESSO do SERVIDOR. É só um app Python rodando e ouvindo a porta 5000.
+
+Máquina x processo
+
+Máquina/Computador/VM: onde tudo roda (seu notebook ou um servidor na nuvem).
+
+Processo do servidor: o programa Python que está rodando: seu app Flask e atendendo requisições.
+
+Como isso conversa com seus arquivos
+
+Usando sua árvore:
+
+site_flask/
+    comunidade/
+        __init__.py     -> cria o app Flask e o objeto database
+        routes.py       -> define as rotas (@app.route("/..."))
+        models.py       -> define tabelas/ORM (Usuario, Post)
+        templates/*.html-> Jinja para renderizar páginas
+        comunidade.db   -> arquivo SQLite (seus dados)
+    main.py -> inicia o servidor (processo) da app
+
+
+Fluxo quando você acessa http://localhost:5000/perfil:
+
+[Navegador]  -->   http://localhost:5000/perfil
+                    |
+                 (SO) redireciona para a porta 5000,
+                 onde o processo do servidor Flask está escutando
+                    |
+[Processo Flask] lê o cookie/sessão, resolve current_user,
+chama a função da rota em routes.py:
+    @app.route("/perfil")
+    def perfil():
+        # pode consultar models.py (ORM) no comunidade.db
+        # pode usar current_user
+        return render_template("perfil.html", ...)
+                    |
+gera HTML a partir de templates/ (Jinja)
+                    |
+resposta HTTP volta para o navegador
+
+Por que chamamos isso de "servidor"?
+
+Porque esse processo está “servindo” páginas/dados: ele recebe pedidos (requests) e envia respostas (responses) pela rede (mesmo que seja “rede local” no seu próprio PC: localhost).
+
+Em produção (só para situar)
+
+No seu PC você usa o servidor de desenvolvimento do Flask. Em produção normalmente:
+
+um servidor WSGI/ASGI (ex.: Gunicorn/Uvicorn) roda vários processos do seu app Flask;
+
+um servidor web (ex.: Nginx) fica na frente, recebendo a internet e repassando pros processos.
+
+Mas a ideia é a mesma: processos rodando seu código e escutando portas para atender requisições.
+
+Metáfora curtinha
+
+Seu código é a cozinha (receitas).
+
+O processo do servidor é o cozinheiro em pé, trabalhando e atendendo pedidos.
+
+A porta 5000 é a janelinha onde os pedidos chegam.
+
+O navegador é o garçom que leva o pedido e traz o prato.
+
+O banco (comunidade.db) é a despensa onde ficam os ingredientes.
+
+Enquanto o cozinheiro (processo) está de pé rodando, seu site responde. Se você parar o processo (Ctrl+C), o restaurante fecha — ninguém atende mais a porta 5000.
+
+Se quiser, te mostro como rodar isso com Gunicorn (produção) ou como ver os logs para enxergar cada requisição chegando no seu “cozinheiro”.
+
+
+OBSERVAÇOES!!!!
+Navegador envia requisicoes get e post, o servidor WEB recebe essas requisicoes e encaminha para os workers do servidor interno, permitindo varias requisições ao mesmo tempo. 
+A quantidade de workers é determinada pelas caracteristas do servidor fisico como memoria, CPU etc. 
+
+# App Flask é o código (objeto app) e tudo que ele define.
+# Processo: é uma instância em execução desse app, com sua própria memória.
+# Em desenvolvimento: normalmente 1 processo rodando seu app.
+# Em produção com Gunicorn: você pode ter vários processos (workers), todos executando a mesma app Flask em paralelo.
+# Cada processo pode ainda ter várias threads (se configurado).
+# Com threads, um único processo (ex.: 1 worker do Gunicorn) pode atender várias requisições em paralelo — cada requisição roda em uma thread.
+
+
+app Flask: do jeito tradicional (Flask + WSGI + Gunicorn padrão), o atendimento é síncrono por worker. Cada worker processa 1 requisição por vez (ou 1 por thread, se você usar --threads), e a concorrência vem de ter vários workers/threads.
+
+Para ficar realmente assíncrono (I/O concorrente dentro do mesmo worker), você precisaria:
+rotas async def + um servidor ASGI (ex.: Uvicorn/Hypercorn, ou Gunicorn com -k uvicorn.workers.UvicornWorker);
+e bibliotecas compatíveis com async.
+
+
+
+
