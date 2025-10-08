@@ -50,7 +50,7 @@ def login ():
         else:
             flash(f'Falha no login. E-mail ou Senha incorretos', category='alert-danger')
     if form_criar_conta.validate_on_submit() and 'botao_submit_criar_conta' in request.form:
-        senha_cript = bcrypt.generate_password_hash(form_login.senha.data)
+        senha_cript = bcrypt.generate_password_hash(form_login.senha.data).decode('utf-8')
         usuario = Usuario(username=form_criar_conta.username.data, email=form_criar_conta.email.data, senha=senha_cript)
         database.session.add(usuario)
         database.session.commit()
@@ -154,3 +154,4 @@ def exibir_post(post_id):
 
 
     
+
